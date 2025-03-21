@@ -10,15 +10,12 @@ import edu.luc.etl.cs313.android.shapes.model.*;
  */
 public class Draw implements Visitor<Void> {
 
-    // TODO entirely your job (except onCircle)
-
     private final Canvas canvas;
-
     private final Paint paint;
 
     public Draw(final Canvas canvas, final Paint paint) {
-        this.canvas = null; // FIXME
-        this.paint = null; // FIXME
+        this.canvas = canvas;
+        this.paint = paint;
         paint.setStyle(Style.STROKE);
     }
 
@@ -29,47 +26,60 @@ public class Draw implements Visitor<Void> {
     }
 
     @Override
-    public Void onStrokeColor(final StrokeColor c) {
+    public Void onRectangle(final Rectangle r) {
+        canvas.drawRect(0, 0, r.getWidth(), r.getHeight(), paint);
+        return null;
+    }
 
+    @Override
+    public Void onStrokeColor(final StrokeColor c) {
+        int prevColor = paint.getColor();
+        paint.setColor(c.getColor()); // Change color
+        c.getShape().accept(this);    // Draw inner shape
+        paint.setColor(prevColor);    // Restore previous color
         return null;
     }
 
     @Override
     public Void onFill(final Fill f) {
-
-        return null;
-    }
-
-    @Override
-    public Void onGroup(final Group g) {
-
-        return null;
-    }
-
-    @Override
-    public Void onLocation(final Location l) {
-
-        return null;
-    }
-
-    @Override
-    public Void onRectangle(final Rectangle r) {
-
+        Style prevStyle = paint.getStyle();
+        paint.setStyle(Style.FILL);  // Change to fill
+        f.getShape().accept(this);   // Draw filled shape
+        paint.setStyle(prevStyle);   // Restore previous style
         return null;
     }
 
     @Override
     public Void onOutline(Outline o) {
+        Style prevStyle = paint.getStyle();
+        paint.setStyle(Style.STROKE); // Ensure it's outlined
+        o.getShape().accept(this);    // Draw shape outline
+        paint.setStyle(prevStyle);
+        return null;
+    }
 
+    @Override
+    public Void onGroup(final Group g) {
+        for (Shape s : g.getShapes()) {
+            s.accept(this); // Draw each shape in the group
+        }
+        return null;
+    }
+
+    @Override
+    public Void onLocation(final Location l) {
+        canvas.save(); // Save canvas state
+        canvas.translate(l.getX(), l.getY()); // Move to new location
+        l.getShape().accept(this); // Draw the shape at new location
+        canvas.restore(); // Restore original position
         return null;
     }
 
     @Override
     public Void onPolygon(final Polygon s) {
-
-        final float[] pts = null;
-
+        final float[] pts = s.getPointsAsArray(); // Ensure this method now exists
         canvas.drawLines(pts, paint);
         return null;
     }
+
 }

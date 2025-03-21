@@ -8,37 +8,61 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+/**
+ * Custom view for drawing shapes.
+ */
 public class DrawWidget extends View {
 
-    private final Paint paint = new Paint();
+    private final Paint paint = new Paint(); // Reuse the paint object
 
     public DrawWidget(final Context context, final AttributeSet attrs, final int defStyle) {
-        this(context);
+        super(context, attrs, defStyle);
     }
 
     public DrawWidget(final Context context, final AttributeSet attrs) {
-        this(context);
+        super(context, attrs);
     }
 
-    public DrawWidget(final Context context) { super(context); }
+    public DrawWidget(final Context context) {
+        super(context);
+    }
 
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
     }
-    
-    // TODO once BoundingBox and Draw are implemented, change Fixtures.simpleCircle
-    // to Fixtures.complexGroup and test the app on an emulator or Android device
-    // to make sure the correct figure is drawn (see Project 3 description for link)
 
     @Override
     @SuppressLint("DrawAllocation")
     protected void onDraw(final Canvas canvas) {
-        final var shape = Fixtures.simpleCircle;
-        final var b = shape.accept(new BoundingBox());
-        canvas.translate(-b.getX(), -b.getY());
-        b.accept(new Draw(canvas, paint));
-        shape.accept(new Draw(canvas, paint));
-        canvas.translate(b.getX(), b.getY());
+        super.onDraw(canvas);
+
+        if (canvas == null) {
+            return; // Prevent NullPointerException
+        }
+
+        // Get the shape to draw
+        final Shape shape = Fixtures.complexGroup; // Ensure Fixtures is correctly implemented
+
+        try {
+            // Compute bounding box
+            final Location bbox = shape.accept(new BoundingBox());
+
+            // Set up paint
+            paint.setColor(android.graphics.Color.RED);
+            paint.setStrokeWidth(5);
+            paint.setStyle(Paint.Style.STROKE);
+
+            // Draw a placeholder rectangle to confirm onDraw works
+            canvas.drawRect(50, 50, 200, 200, paint);
+
+            // Draw the actual shape
+            shape.accept(new Draw(canvas, paint));
+        } catch (Exception e) {
+            // Handle any unexpected exceptions
+            paint.setColor(android.graphics.Color.RED);
+            paint.setTextSize(40);
+            canvas.drawText("ERROR: " + e.getMessage(), 50, 100, paint);
+        }
     }
 }

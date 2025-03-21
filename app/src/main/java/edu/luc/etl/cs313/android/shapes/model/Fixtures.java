@@ -35,33 +35,33 @@ public class Fixtures {
     );
 
     public static final Shape complexGroup = new Location(50, 100,
-        new Group(
-            new Circle(20),
-            new Rectangle(100, 200),
-            new Location(150, 50,
-                new StrokeColor(Color.RED,
-                    new Fill(
-                        new Group(
-                            new Rectangle(50, 30),
-                            new Outline(new Rectangle(300, 60)),
-                            new StrokeColor(Color.BLUE,
-                                new Polygon(
-                                    new Point(50, 50),
-                                    new Point(60, 100),
-                                    new Point(100, 110),
-                                    new Point(120, 60)
-                                )
-                            ),
-                            new Location(100, 200,
-                                new StrokeColor(Color.MAGENTA,
-                                    new Outline(new Circle(50))
-                                )
+            new Group(
+                    new Circle(20),
+                    new Rectangle(100, 200),
+                    new Location(150, 50,
+                            new StrokeColor(Color.RED,
+                                    new Fill(
+                                            new Group(
+                                                    new Rectangle(50, 30),
+                                                    new Outline(new Rectangle(300, 60)),
+                                                    new StrokeColor(Color.BLUE,
+                                                            new Polygon(
+                                                                    new Point(50, 50),
+                                                                    new Point(60, 100),
+                                                                    new Point(100, 110),
+                                                                    new Point(120, 60)
+                                                            )
+                                                    ),
+                                                    new Location(100, 200,
+                                                            new StrokeColor(Color.MAGENTA,
+                                                                    new Outline(new Circle(50))
+                                                            )
+                                                    )
+                                            )
+                                    )
                             )
-                        )
                     )
-                )
             )
-        )
     );
 
     public static final Shape simpleOutline = new Outline(new Rectangle(80, 120));
