@@ -1,16 +1,19 @@
 package edu.luc.etl.cs313.android.shapes.model;
 
-/**
- * A point, implemented as a location without a shape.
- */
-public class Point extends Location {
+public class Point {
 
-    // TODO your job
-    // HINT: use a circle with radius 0 as the shape!
+    private final int x, y;
 
     public Point(final int x, final int y) {
-        super(-1, -1, null);
-        assert x >= 0;
-        assert y >= 0;
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }
